@@ -17,7 +17,11 @@ If you run it in Singularity containers:
 * Go version at least 1.13
 * Singularity version at least 3.6.3
 
-The requirements above are just suggestions. If you run into any issue, please contact organizers for help (zfxu@utexas.edu).
+What works (tested)
+* Ubuntu/Kubuntu 20.04
+* ROS Noetic
+* Go 1.18
+* Singularity 3.9.8 ([compiled from source](https://sylabs.io/guides/3.5/user-guide/quick_start.html))
 
 ## Installation
 Follow the instructions below to run simulations on your local machines. (You can skip 1-6 if you only use Singularity container)
@@ -27,7 +31,9 @@ Follow the instructions below to run simulations on your local machines. (You ca
 apt -y update; apt-get -y install python3-venv
 python3 -m venv /<YOUR_HOME_DIR>/nav_challenge
 export PATH="/<YOUR_HOME_DIR>/nav_challenge/bin:$PATH"
+source <YOUR_HOME_DIR>/nav_challenge/bin/activate
 ```
+type `deactivate` to exit the venv.
 
 2. Install Python dependencies
 ```
@@ -49,7 +55,7 @@ git clone https://github.com/jackal/jackal_desktop.git --branch <YOUR_ROS_VERSIO
 git clone https://github.com/utexas-bwi/eband_local_planner.git
 ```
 
-5. Install ROS package dependencies: (replace `<YOUR_ROS_VERSION>` with your own, e.g. melodic)
+5. Install ROS package dependencies: (replace `<YOUR_ROS_VERSION>` with your own, e.g. noetic)
 ```
 cd ..
 source /opt/ros/<YOUR_ROS_VERSION>/setup.bash
@@ -57,13 +63,14 @@ rosdep init; rosdep update
 rosdep install -y --from-paths . --ignore-src --rosdistro=<YOUR_ROS_VERSION>
 ```
 
-6. Build the workspace (if `catkin_make` fails, try changing `-std=c++11` to `-std=c++17` in `jackal_helper/CMakeLists.txt` line 3)
+6. Build the workspace (if `catkin_make` fails, try changing `-std=c++11` to `-std=c++17` in `jackal_helper/CMakeLists.txt` line 3. This step will mostly be required)
 ```
-source devel/setup.bash
 catkin_make
+source devel/setup.bash
 ```
+if you get empy error while running `catkin_make` then use `catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3` instead.
 
-Follow the instruction below to run simulations in Singularity containers.
+### Follow the instruction below to run simulations in Singularity containers.
 
 1. Follow this instruction to install Singularity: https://sylabs.io/guides/3.0/user-guide/installation.html. Singularity version >= 3.6.3 is required to successfully build the image!
 
@@ -86,6 +93,7 @@ If you run it on your local machines: (the example below runs [move_base](http:/
 source ../../devel/setup.sh
 python3 run.py --world_idx 0
 ```
+add `--gui` flag for Gazebo simulation.
 
 If you run it in a Singularity container:
 ```
